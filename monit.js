@@ -5,8 +5,8 @@
 /*                                                     +:+                    */
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/11/11 22:04:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/11 22:12:19 by fbes          ########   odam.nl         */
+/*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
+/*   Updated: 2021/11/11 22:26:06 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,71 +34,6 @@ var monit = {
 
 	getCoalitionColor: function() {
 		return (document.getElementsByClassName("coalition-span")[0].style.color);
-	},
-
-	writeProgress: function() {
-		var progressNode = document.createElement("div");
-		progressNode.setAttribute("id", "monit-progress");
-
-		var progressTitle = document.createElement("div");
-		progressTitle.setAttribute("class", "mb-1");
-		progressTitle.innerHTML = '<span class="coalition-span" style="color: '+this.getCoalitionColor()+';">Monitoring System progress</span>';
-		progressNode.appendChild(progressTitle);
-
-		var progressText = document.createElement("div");
-		progressText.setAttribute("id", "monit-progress-text");
-
-		var emoteHolder = document.createElement("div");
-		emoteHolder.setAttribute("id", "lt-holder");
-		emoteHolder.setAttribute("class", "emote-bh");
-		emoteHolder.setAttribute("data-toggle", "tooltip");
-		emoteHolder.setAttribute("data-original-title", "Logtime this week: " + this.logTimeToString(this.logTimesTotal));
-		emoteHolder.setAttribute("title", "");
-
-		var smiley = document.createElement("span");
-		smiley.setAttribute("id", "lt-emote");
-		var progressPerc = document.createElement("span");
-		progressPerc.innerHTML = Math.floor(this.logTimesTotal / 1440 * 100) + "% complete";
-		if (this.logTimesTotal < this.requirements.almost) {
-			smiley.setAttribute("class", "icon-smiley-sad-1");
-			smiley.setAttribute("style", "color: rgb(238, 97, 115);");
-			progressPerc.setAttribute("style", "color: rgb(238, 97, 115);");
-		}
-		else if (this.logTimesTotal < this.requirements.min) {
-			smiley.setAttribute("class", "icon-smiley-relax");
-			smiley.setAttribute("style", "color: rgb(223, 149, 57);");
-			progressPerc.setAttribute("style", "color: rgb(223, 149, 57);");
-		}
-		else if (this.logTimesTotal < this.requirements.achievement1) {
-			smiley.setAttribute("class", "icon-smiley-happy-5");
-			smiley.setAttribute("style", "color: rgb(83, 210, 122);");
-			progressPerc.setAttribute("style", "color: rgb(83, 210, 122);");
-		}
-		else if (this.logTimesTotal < this.requirements.achievement2) {
-			smiley.setAttribute("class", "icon-smiley-happy-1");
-			smiley.setAttribute("style", "color: rgb(83, 210, 122);");
-			progressPerc.setAttribute("style", "color: rgb(83, 210, 122);");
-		}
-		else {
-			smiley.setAttribute("class", "icon-smiley-surprise");
-			smiley.setAttribute("style", "color: rgb(83, 210, 122);");
-			progressPerc.setAttribute("style", "color: rgb(83, 210, 122);");
-		}
-		emoteHolder.appendChild(smiley);
-		emoteHolder.appendChild(progressPerc);
-
-		progressText.appendChild(emoteHolder);
-
-		progressNode.appendChild(progressText);
-
-		this.bhContainer.appendChild(progressNode);
-
-		// add script
-		var actualCode = '$("#lt-holder").tooltip();';
-		var script = document.createElement('script');
-		script.appendChild(document.createTextNode(actualCode));
-		(document.head || document.documentElement).appendChild(script);
-		script.parentNode.removeChild(script);
 	},
 
 	parseLogTime: function(logTimeText) {
@@ -149,12 +84,85 @@ var monit = {
 			}
 		}
 		this.bhContainer = document.getElementById("goals_container");
+		if (!this.bhContainer) {
+			return;
+		}
 		for (var i = 0; i < this.bhContainer.children.length; i++) {
 			this.bhContainer.children[i].style.display = "none";
 		}
 		if (this.getLogTimes()) {
 			this.writeProgress();
+			// force show black hole container
+			this.bhContainer.className = this.bhContainer.className.replace("hidden", "");
 		}
+	},
+
+	addTooltip: function() {
+		// add bootstrap tooltip to holder
+		var actualCode = '$("#lt-holder").tooltip();';
+		var script = document.createElement('script');
+		script.appendChild(document.createTextNode(actualCode));
+		(document.head || document.documentElement).appendChild(script);
+		script.parentNode.removeChild(script);
+	},
+
+	writeProgress: function() {
+		var progressNode = document.createElement("div");
+		progressNode.setAttribute("id", "monit-progress");
+
+		var progressTitle = document.createElement("div");
+		progressTitle.setAttribute("class", "mb-1");
+		progressTitle.innerHTML = '<span class="coalition-span" style="color: '+this.getCoalitionColor()+';">Monitoring System progress</span>';
+		progressNode.appendChild(progressTitle);
+
+		var progressText = document.createElement("div");
+		progressText.setAttribute("id", "monit-progress-text");
+
+		var emoteHolder = document.createElement("div");
+		emoteHolder.setAttribute("id", "lt-holder");
+		emoteHolder.setAttribute("class", "emote-lt");
+		emoteHolder.setAttribute("data-toggle", "tooltip");
+		emoteHolder.setAttribute("data-original-title", "Logtime this week: " + this.logTimeToString(this.logTimesTotal));
+		emoteHolder.setAttribute("title", "");
+
+		var smiley = document.createElement("span");
+		smiley.setAttribute("id", "lt-emote");
+		var progressPerc = document.createElement("span");
+		progressPerc.innerHTML = Math.floor(this.logTimesTotal / 1440 * 100) + "% complete";
+		if (this.logTimesTotal < this.requirements.almost) {
+			smiley.setAttribute("class", "icon-smiley-sad-1");
+			smiley.setAttribute("style", "color: rgb(238, 97, 115);");
+			progressPerc.setAttribute("style", "color: rgb(238, 97, 115);");
+		}
+		else if (this.logTimesTotal < this.requirements.min) {
+			smiley.setAttribute("class", "icon-smiley-relax");
+			smiley.setAttribute("style", "color: rgb(223, 149, 57);");
+			progressPerc.setAttribute("style", "color: rgb(223, 149, 57);");
+		}
+		else if (this.logTimesTotal < this.requirements.achievement1) {
+			smiley.setAttribute("class", "icon-smiley-happy-5");
+			smiley.setAttribute("style", "color: rgb(83, 210, 122);");
+			progressPerc.setAttribute("style", "color: rgb(83, 210, 122);");
+		}
+		else if (this.logTimesTotal < this.requirements.achievement2) {
+			smiley.setAttribute("class", "icon-smiley-happy-1");
+			smiley.setAttribute("style", "color: rgb(83, 210, 122);");
+			progressPerc.setAttribute("style", "color: rgb(83, 210, 122);");
+		}
+		else {
+			smiley.setAttribute("class", "icon-smiley-surprise");
+			smiley.setAttribute("style", "color: rgb(83, 210, 122);");
+			progressPerc.setAttribute("style", "color: rgb(83, 210, 122);");
+		}
+		emoteHolder.appendChild(smiley);
+		emoteHolder.appendChild(progressPerc);
+
+		progressText.appendChild(emoteHolder);
+
+		progressNode.appendChild(progressText);
+
+		this.bhContainer.appendChild(progressNode);
+		this.addTooltip();
 	}
 };
 
