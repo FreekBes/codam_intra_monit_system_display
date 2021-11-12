@@ -1,6 +1,10 @@
 # Codam's Monitoring System Progress for Intra
 This extension replaces the Black Hole box on 42's Intranet with a display of one's current progress towards Codam's evaluation system.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/FreekBes/codam_intra_monit_system_display/master/images/screenshot.png">
+</p>
+
 ## What the extension shows
 On each profile, instead of showing the days until Black Hole consumption, the extension shows the percentage completed towards Codam's monitoring system. Keep in mind that it is currently impossible to get the actual time spent in the building at Codam from a user. This extension shows the progress towards the 24 hour requirement **based on Intra login time**. This means that it could be inaccurate, especially if you haven't been using a Mac in the cluster often.
 
