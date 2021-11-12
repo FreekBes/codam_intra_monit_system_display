@@ -1,11 +1,18 @@
 {
 	"manifest_version": 2,
-	"name": "Codam's Monitoring System Progress for Intra 42",
-	"short_name": "Monitoring System Progress for Intra",
+	"name": "Codam's Monitoring System Progress for Intra",
+	"short_name": "Monitoring System for Intra",
 	"version": "0.5.0",
 	"version_name": "0.5.0",
 	"description": "Replaces the Black Hole box on Intra 42 with a display of your current progress for Codam's evaluation system",
-	"icons": {},
+	"icons": {
+		"32": "images/logo32.png",
+		"64": "images/logo64.png",
+		"96": "images/logo96.png",
+		"128": "images/logo128.png",
+		"256": "images/logo256.png",
+		"512": "images/logo512.png"
+	},
 	"permissions": [ "*://profile.intra.42.fr/", "*://*.intra.42.fr/users/*" ],
 	"content_scripts": [
 		{
