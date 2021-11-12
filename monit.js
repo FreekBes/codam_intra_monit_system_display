@@ -6,11 +6,11 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/12 16:56:33 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/12 18:08:45 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-function reducer(prevVal, curVal) {
+function sum(prevVal, curVal) {
 	return (prevVal + curVal);
 }
 
@@ -23,7 +23,7 @@ var monit = {
 		achievement2: 4800
 	},
 	dayOfWeek: -1,
-	expected: [],
+	expected: 0,
 	bhContainer: null,
 	logTimes: [],
 	logTimesTotal: 0,
@@ -43,28 +43,25 @@ var monit = {
 	},
 
 	/**
-	 * Get the expectations for this week, based on the first day the user logged in.
-	 * At the first day a user has logged in, start setting expectations (we expect the
-	 * user to log in every day after, with the same amount of time per day necessary to
-	 * make the required minimum for the monitoring system.
+	 * Get the expectations for this week, based on the minutes the user has currently
+	 * and how many days are left. The required minutes left are expected to be spread
+	 * out, equally divided over all remaining days.
 	 */
 	setExpected: function() {
-		var daysLeft = 7;
-		var i;
+		var logTimesNoToday = this.logTimes.slice(1);
+		var logTimesTotalNoToday;
 
-		this.expected = [];
-		for (i = 0; i < this.logTimes.length; i++) {
-			if (this.logTimes[i] > 0) {
-				break;
-			}
-			this.expected.push(0);
-			daysLeft--;
+		logTimesTotalNoToday = logTimesNoToday.reduce(sum);
+		if (this.dayOfWeek == 7 || this.logTimesTotal > this.requirements.min) {
+			this.expected = this.requirements.min;
 		}
-		for (i = 1; i < daysLeft + 1 && i < this.dayOfWeek; i++) {
-			this.expected.push(Math.floor(this.requirements.min * i / daysLeft));
+		else {
+			this.expected = logTimesTotalNoToday + Math.round((this.requirements.min - logTimesTotalNoToday) / (7 - this.dayOfWeek));
 		}
-		this.requirements.almost = this.expected[this.expected.length - 1];
-		console.log("Expected hours", this.expected);
+		this.requirements.almost = this.expected;
+		console.log("Logtime up until today", logTimesTotalNoToday);
+		console.log("Expected minutes today", this.expected - logTimesTotalNoToday);
+		console.log("Expected minutes after today", this.expected);
 	},
 
 	parseLogTime: function(logTimeText) {
@@ -91,7 +88,6 @@ var monit = {
 
 	getLogTimesFallback: function() {
 		return (new Promise(function (resolve, reject) {
-			monit.logTimes = [];
 			var ltSvg = document.getElementById("user-locations");
 			if (!ltSvg) {
 				reject("Element #user-locations not found");
@@ -99,6 +95,7 @@ var monit = {
 			var ltDays = ltSvg.getElementsByTagName("g");
 			var ltDay = null;
 
+			monit.logTimes = [];
 			for (var i = 0; i <= monit.dayOfWeek; i++) {
 				ltDay = ltDays[ltDays.length - i - 1];
 				if (!ltDay) {
@@ -106,7 +103,7 @@ var monit = {
 				}
 				monit.logTimes.push(monit.parseLogTime(ltDay.getAttribute("data-original-title")));
 			}
-			monit.logTimesTotal = monit.logTimes.reduce(reducer);
+			monit.logTimesTotal = monit.logTimes.reduce(sum);
 			resolve();
 		}));
 	},
@@ -121,6 +118,7 @@ var monit = {
 				try {
 					var stats = JSON.parse(this.responseText);
 					var weekDates = monit.getWeekDates();
+					monit.logTimes = [];
 					for (var i = 0; i < weekDates.length; i++) {
 						if (weekDates[i] in stats) {
 							monit.logTimes.push(monit.parseLogTime(stats[weekDates[i]]));
@@ -129,7 +127,7 @@ var monit = {
 							monit.logTimes.push(0);
 						}
 					}
-					monit.logTimesTotal = monit.logTimes.reduce(reducer);
+					monit.logTimesTotal = monit.logTimes.reduce(sum);
 					resolve();
 				}
 				catch (err) {
@@ -201,6 +199,11 @@ var monit = {
 	writeProgress: function() {
 		monit.logTimes[0] = 0;
 		monit.logTimes[1] = 0;
+		monit.logTimes[2] = 0;
+		monit.logTimes[3] = 0;
+		monit.logTimes[4] = 0;
+		monit.logTimes[5] = 0;
+		monit.logTimesTotal = monit.logTimes.reduce(sum);
 		monit.setExpected();
 		console.log("Logtimes", monit.logTimes);
 		console.log("Total minutes", monit.logTimesTotal);
@@ -265,7 +268,6 @@ var monit = {
 	},
 
 	init: function() {
-		this.setExpected();
 		this.dayOfWeek = new Date().getDay() - 1;
 		if (this.dayOfWeek < 0) {
 			this.dayOfWeek = 7;
