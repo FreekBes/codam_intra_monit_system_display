@@ -79,6 +79,10 @@ var monit = {
 
 	getProgress: function() {
 		if (window.location.pathname.indexOf("/users/") == 0) {
+			var iconLocation = document.getElementsByClassName("icon-location");
+			if (iconLocation.length == 0) {
+				return;
+			}
 			if (document.getElementsByClassName("icon-location")[0].nextSibling.nextSibling.textContent != "Amsterdam") {
 				return;
 			}
