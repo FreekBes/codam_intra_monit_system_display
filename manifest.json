@@ -10,9 +10,9 @@
 	"content_scripts": [
 		{
 			"matches": [ "*://profile.intra.42.fr/", "*://*.intra.42.fr/users/*" ],
-			"js": ["monit.js"],
-			"css": ["monit.css"],
-			"run_at": "document_end"
+			"js": [ "monit.js" ],
+			"css": [ "monit.css" ],
+			"run_at": "document_idle"
 		}
 	]
 }
