@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/12 14:26:19 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/12 14:28:15 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ var monit = {
 			if (iconLocation[0].nextSibling.nextSibling.textContent != "Amsterdam") {
 				return;
 			}
-			username = document.querySelector("[data-login]").getAttribute("data-login");
+			username = document.querySelector(".login[data-login]").getAttribute("data-login");
 		}
 		this.bhContainer = document.getElementById("goals_container");
 		if (!this.bhContainer) {
