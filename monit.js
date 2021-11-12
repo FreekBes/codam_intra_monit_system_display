@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/12 18:11:43 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/12 18:15:10 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,12 +232,12 @@ var monit = {
 			progressPerc.setAttribute("style", "color: rgb(223, 149, 57);");
 		}
 		else if (monit.logTimesTotal < monit.requirements.achievement1) {
-			smiley.setAttribute("class", "icon-smiley-happy-5");
+			smiley.setAttribute("class", "icon-smiley-happy-3");
 			smiley.setAttribute("style", "color: rgb(83, 210, 122);");
 			progressPerc.setAttribute("style", "color: rgb(83, 210, 122);");
 		}
 		else if (monit.logTimesTotal < monit.requirements.achievement2) {
-			smiley.setAttribute("class", "icon-smiley-happy-1");
+			smiley.setAttribute("class", "icon-smiley-happy-5");
 			smiley.setAttribute("style", "color: rgb(83, 210, 122);");
 			progressPerc.setAttribute("style", "color: rgb(83, 210, 122);");
 		}
