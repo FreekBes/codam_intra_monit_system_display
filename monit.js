@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/12 18:08:45 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/12 18:10:01 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,13 +197,6 @@ var monit = {
 	},
 
 	writeProgress: function() {
-		monit.logTimes[0] = 0;
-		monit.logTimes[1] = 0;
-		monit.logTimes[2] = 0;
-		monit.logTimes[3] = 0;
-		monit.logTimes[4] = 0;
-		monit.logTimes[5] = 0;
-		monit.logTimesTotal = monit.logTimes.reduce(sum);
 		monit.setExpected();
 		console.log("Logtimes", monit.logTimes);
 		console.log("Total minutes", monit.logTimesTotal);
