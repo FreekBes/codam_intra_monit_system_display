@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/12 14:28:15 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/12 16:56:33 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ var monit = {
 		achievement1: 3000,
 		achievement2: 4800
 	},
+	dayOfWeek: -1,
+	expected: [],
 	bhContainer: null,
 	logTimes: [],
 	logTimesTotal: 0,
@@ -33,15 +35,36 @@ var monit = {
 	getWeekDates: function() {
 		var thisWeek = [];
 		var timestamp = new Date().getTime();
-		var dayOfWeek = new Date().getDay() - 1;
-		if (dayOfWeek < 0) {
-			dayOfWeek = 7;
-		}
 		thisWeek.push((new Date().toISOString().split("T")[0]));
-		for (var i = 1; i <= dayOfWeek; i++) {
+		for (var i = 1; i <= monit.dayOfWeek; i++) {
 			thisWeek.push(new Date(timestamp - 86400000 * i).toISOString().split("T")[0]);
 		}
 		return (thisWeek);
+	},
+
+	/**
+	 * Get the expectations for this week, based on the first day the user logged in.
+	 * At the first day a user has logged in, start setting expectations (we expect the
+	 * user to log in every day after, with the same amount of time per day necessary to
+	 * make the required minimum for the monitoring system.
+	 */
+	setExpected: function() {
+		var daysLeft = 7;
+		var i;
+
+		this.expected = [];
+		for (i = 0; i < this.logTimes.length; i++) {
+			if (this.logTimes[i] > 0) {
+				break;
+			}
+			this.expected.push(0);
+			daysLeft--;
+		}
+		for (i = 1; i < daysLeft + 1 && i < this.dayOfWeek; i++) {
+			this.expected.push(Math.floor(this.requirements.min * i / daysLeft));
+		}
+		this.requirements.almost = this.expected[this.expected.length - 1];
+		console.log("Expected hours", this.expected);
 	},
 
 	parseLogTime: function(logTimeText) {
@@ -69,10 +92,6 @@ var monit = {
 	getLogTimesFallback: function() {
 		return (new Promise(function (resolve, reject) {
 			monit.logTimes = [];
-			var dayOfWeek = new Date().getDay() - 1;
-			if (dayOfWeek < 0) {
-				dayOfWeek = 7;
-			}
 			var ltSvg = document.getElementById("user-locations");
 			if (!ltSvg) {
 				reject("Element #user-locations not found");
@@ -80,7 +99,7 @@ var monit = {
 			var ltDays = ltSvg.getElementsByTagName("g");
 			var ltDay = null;
 
-			for (var i = 0; i <= dayOfWeek; i++) {
+			for (var i = 0; i <= monit.dayOfWeek; i++) {
 				ltDay = ltDays[ltDays.length - i - 1];
 				if (!ltDay) {
 					reject("Not enough days in logtimes overview SVG");
@@ -105,6 +124,9 @@ var monit = {
 					for (var i = 0; i < weekDates.length; i++) {
 						if (weekDates[i] in stats) {
 							monit.logTimes.push(monit.parseLogTime(stats[weekDates[i]]));
+						}
+						else {
+							monit.logTimes.push(0);
 						}
 					}
 					monit.logTimesTotal = monit.logTimes.reduce(reducer);
@@ -177,6 +199,9 @@ var monit = {
 	},
 
 	writeProgress: function() {
+		monit.logTimes[0] = 0;
+		monit.logTimes[1] = 0;
+		monit.setExpected();
 		console.log("Logtimes", monit.logTimes);
 		console.log("Total minutes", monit.logTimesTotal);
 
@@ -237,7 +262,16 @@ var monit = {
 		monit.bhContainer.appendChild(progressNode);
 		monit.bhContainer.className = monit.bhContainer.className.replace("hidden", "");
 		monit.addTooltip();
+	},
+
+	init: function() {
+		this.setExpected();
+		this.dayOfWeek = new Date().getDay() - 1;
+		if (this.dayOfWeek < 0) {
+			this.dayOfWeek = 7;
+		}
 	}
 };
 
+monit.init();
 monit.getProgress();
