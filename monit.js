@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/12 18:30:28 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/12 19:56:39 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ var monit = {
 	/**
 	 * Get a user's logtime from the web and parse it into the logtime array
 	 */
-	getLogTimes: function(username) {
+	getLogTimesWeb: function(username) {
 		return (new Promise(function(resolve, reject) {
 			if (monit.httpReq != null) {
 				monit.httpReq.abort();
@@ -134,12 +134,10 @@ var monit = {
 	},
 
 	/**
-	 * In case the web logtime getter above fails, use the logtime chart instead.
-	 * It's quicker anyways, but sometimes the SVG loads fairly slowly.
-	 * Plus, it only works on pages that include the logtime chart (luckily all pages
-	 * where this extension shows the Monitoring System progress)
+	 * Get the logtime from the logtime chart, modify the chart to include
+	 * progress for previous weeks, and parse this week's logtime into the logtime array
 	 */
-	getLogTimesFallback: function() {
+	getLogTimes: function() {
 		return (new Promise(function (resolve, reject) {
 			var ltSvg = document.getElementById("user-locations");
 			if (!ltSvg) {
@@ -147,9 +145,10 @@ var monit = {
 			}
 			var ltDays = ltSvg.getElementsByTagName("g");
 			var ltDay = null;
+			var i, j;
 
 			monit.logTimes = [];
-			for (var i = 0; i <= monit.dayOfWeek; i++) {
+			for (i = 0; i <= monit.dayOfWeek; i++) {
 				ltDay = ltDays[ltDays.length - i - 1];
 				if (!ltDay) {
 					reject("Not enough days in logtimes overview SVG");
@@ -157,16 +156,54 @@ var monit = {
 				monit.logTimes.push(monit.parseLogTime(ltDay.getAttribute("data-original-title")));
 			}
 			monit.logTimesTotal = monit.logTimes.reduce(sum);
+
+			var daysInWeek = monit.dayOfWeek + 1;
+			var remainingWeeks = Math.floor(ltDays.length / 7) + (monit.dayOfWeek != 7 ? 1 : 0);
+			var r = 0;
+			var tempLogTimes;
+			for (i = 0; i < remainingWeeks; i++) {
+				if (i == 1) {
+					daysInWeek = 7;
+				}
+				tempLogTimes = [];
+
+				// parse individual logtimes
+				for (j = 0; j < daysInWeek; j++) {
+					ltDay = ltDays[ltDays.length - r - 1];
+					if (!ltDay) {
+						resolve();
+						return;
+					}
+					tempLogTimes.push(monit.parseLogTime(ltDay.getAttribute("data-original-title")));
+					if (tempLogTimes[j] == 0) {
+						ltDay.setAttribute("data-nolog", "");
+					}
+					r++;
+				}
+
+				// calculate cumulative logtime
+				for (j = daysInWeek - 2; j > -1; j--) {
+					tempLogTimes[j] = tempLogTimes[j] + tempLogTimes[j + 1];
+				}
+
+				// add cumulative logtime and percentage to tooltips
+				for (j = daysInWeek - 1; j > -1; j--) {
+					ltDay = ltDays[ltDays.length - r + j];
+					if (!ltDay) {
+						resolve();
+						return;
+					}
+					ltDay.setAttribute("data-original-title", ltDay.getAttribute("data-original-title") + " (" + monit.logTimeToString(tempLogTimes[daysInWeek - 1 - j]) + " / " + Math.floor(tempLogTimes[daysInWeek - 1 - j] / monit.requirements.min * 100) + "%)");
+				}
+			}
 			resolve();
 		}));
 	},
 
 	/**
 	 * Get the progress towards the Monitoring System's goals from the current webpage.
-	 * If we're on a profile page, we load the logtimes from the username that's listed in the profile header.
-	 * If we're not, we assume we're on the homepage, which is always for user "me" (the current user).
-	 * We try to get the logtimes using the web function, but in case it fails, we load it from the SVG chart
-	 * instead. If this fails, we try it once more after half a second.
+	 * The logtime data is read from the SVG logtime chart, but in case that fails there's
+	 * a fallback available to read from the web instead.
 	 */
 	getProgress: function() {
 		var username = "me";
@@ -194,22 +231,11 @@ var monit = {
 		this.getLogTimes(username)
 			.then(this.writeProgress)
 			.catch(function(err) {
-				console.error(err);
-				console.warn("Could not retrieve logtimes from locations_stats.json URL. Using fallback...");
-				setTimeout(function() {
-					monit.getLogTimesFallback()
-						.then(monit.writeProgress)
-						.catch(function(err) {
-							setTimeout(function() {
-								monit.getLogTimesFallback().then(monit.writeProgress)
-								.catch(function(err) {
-									console.error("Could not get logtimes using fallback", err);
-								});
-							}, 500);
-							console.warn("Could not get logtimes using fallback, retrying once in half a second");
-							console.error(err);
-						});
-					}, 250);
+				console.warn("Could not read logtimes chart:", err);
+				monit.getLogTimesWeb(username).then(monit.writeProgress)
+					.catch(function(err) {
+						console.error("Could not retrieve logtimes from the web", err);
+					});
 			});
 	},
 
@@ -298,4 +324,6 @@ var monit = {
 };
 
 monit.init();
-monit.getProgress();
+setTimeout(function() {
+	monit.getProgress();
+}, 250);
