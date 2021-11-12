@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/12 18:10:01 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/12 18:11:43 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,12 @@ function sum(prevVal, curVal) {
 var monit = {
 	httpReq: null,
 	requirements: {
-		almost: 1080,
+		today: 205,
 		min: 1440,
 		achievement1: 3000,
 		achievement2: 4800
 	},
 	dayOfWeek: -1,
-	expected: 0,
 	bhContainer: null,
 	logTimes: [],
 	logTimesTotal: 0,
@@ -53,15 +52,14 @@ var monit = {
 
 		logTimesTotalNoToday = logTimesNoToday.reduce(sum);
 		if (this.dayOfWeek == 7 || this.logTimesTotal > this.requirements.min) {
-			this.expected = this.requirements.min;
+			this.requirements.today = this.requirements.min;
 		}
 		else {
-			this.expected = logTimesTotalNoToday + Math.round((this.requirements.min - logTimesTotalNoToday) / (7 - this.dayOfWeek));
+			this.requirements.today = logTimesTotalNoToday + Math.round((this.requirements.min - logTimesTotalNoToday) / (7 - this.dayOfWeek));
 		}
-		this.requirements.almost = this.expected;
 		console.log("Logtime up until today", logTimesTotalNoToday);
-		console.log("Expected minutes today", this.expected - logTimesTotalNoToday);
-		console.log("Expected minutes after today", this.expected);
+		console.log("Expected minutes today", this.requirements.today - logTimesTotalNoToday);
+		console.log("Expected minutes after today", this.requirements.today);
 	},
 
 	parseLogTime: function(logTimeText) {
