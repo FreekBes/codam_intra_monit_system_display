@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/12 18:15:10 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/12 18:21:13 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ var monit = {
 		smiley.setAttribute("id", "lt-emote");
 		var progressPerc = document.createElement("span");
 		progressPerc.innerHTML = Math.floor(monit.logTimesTotal / 1440 * 100) + "% complete";
-		if (monit.logTimesTotal < monit.requirements.almost) {
+		if (monit.logTimesTotal < monit.requirements.today) {
 			smiley.setAttribute("class", "icon-smiley-sad-1");
 			smiley.setAttribute("style", "color: rgb(238, 97, 115);");
 			progressPerc.setAttribute("style", "color: rgb(238, 97, 115);");
