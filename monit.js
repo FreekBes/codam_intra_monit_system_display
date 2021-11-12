@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/12 18:21:13 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/12 18:30:28 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,16 @@ var monit = {
 	logTimes: [],
 	logTimesTotal: 0,
 
+	/**
+	 * Get the color of the user's coalition
+	 */
 	getCoalitionColor: function() {
 		return (document.getElementsByClassName("coalition-span")[0].style.color);
 	},
 
+	/**
+	 * Get the dates of this week's days
+	 */
 	getWeekDates: function() {
 		var thisWeek = [];
 		var timestamp = new Date().getTime();
@@ -62,6 +68,9 @@ var monit = {
 		console.log("Expected minutes after today", this.requirements.today);
 	},
 
+	/**
+	 * Parse a piece of logtime text: in format HHhMM or HH:MM(:SS)
+	 */
 	parseLogTime: function(logTimeText) {
 		var logTime = 0;
 		var logTimeSplit;
@@ -80,32 +89,16 @@ var monit = {
 		return (logTime);
 	},
 
+	/**
+	 * Convert a logTime into a string with format HHhMM
+	 */
 	logTimeToString: function(logTime) {
 		return (Math.floor(logTime / 60) + "h" + (logTime % 60).toLocaleString(undefined, {minimumIntegerDigits: 2}));
 	},
 
-	getLogTimesFallback: function() {
-		return (new Promise(function (resolve, reject) {
-			var ltSvg = document.getElementById("user-locations");
-			if (!ltSvg) {
-				reject("Element #user-locations not found");
-			}
-			var ltDays = ltSvg.getElementsByTagName("g");
-			var ltDay = null;
-
-			monit.logTimes = [];
-			for (var i = 0; i <= monit.dayOfWeek; i++) {
-				ltDay = ltDays[ltDays.length - i - 1];
-				if (!ltDay) {
-					reject("Not enough days in logtimes overview SVG");
-				}
-				monit.logTimes.push(monit.parseLogTime(ltDay.getAttribute("data-original-title")));
-			}
-			monit.logTimesTotal = monit.logTimes.reduce(sum);
-			resolve();
-		}));
-	},
-
+	/**
+	 * Get a user's logtime from the web and parse it into the logtime array
+	 */
 	getLogTimes: function(username) {
 		return (new Promise(function(resolve, reject) {
 			if (monit.httpReq != null) {
@@ -140,6 +133,41 @@ var monit = {
 		}));
 	},
 
+	/**
+	 * In case the web logtime getter above fails, use the logtime chart instead.
+	 * It's quicker anyways, but sometimes the SVG loads fairly slowly.
+	 * Plus, it only works on pages that include the logtime chart (luckily all pages
+	 * where this extension shows the Monitoring System progress)
+	 */
+	getLogTimesFallback: function() {
+		return (new Promise(function (resolve, reject) {
+			var ltSvg = document.getElementById("user-locations");
+			if (!ltSvg) {
+				reject("Element #user-locations not found");
+			}
+			var ltDays = ltSvg.getElementsByTagName("g");
+			var ltDay = null;
+
+			monit.logTimes = [];
+			for (var i = 0; i <= monit.dayOfWeek; i++) {
+				ltDay = ltDays[ltDays.length - i - 1];
+				if (!ltDay) {
+					reject("Not enough days in logtimes overview SVG");
+				}
+				monit.logTimes.push(monit.parseLogTime(ltDay.getAttribute("data-original-title")));
+			}
+			monit.logTimesTotal = monit.logTimes.reduce(sum);
+			resolve();
+		}));
+	},
+
+	/**
+	 * Get the progress towards the Monitoring System's goals from the current webpage.
+	 * If we're on a profile page, we load the logtimes from the username that's listed in the profile header.
+	 * If we're not, we assume we're on the homepage, which is always for user "me" (the current user).
+	 * We try to get the logtimes using the web function, but in case it fails, we load it from the SVG chart
+	 * instead. If this fails, we try it once more after half a second.
+	 */
 	getProgress: function() {
 		var username = "me";
 
@@ -194,6 +222,9 @@ var monit = {
 		script.parentNode.removeChild(script);
 	},
 
+	/**
+	 * Write the progress data to the Black Hole box
+	 */
 	writeProgress: function() {
 		monit.setExpected();
 		console.log("Logtimes", monit.logTimes);
