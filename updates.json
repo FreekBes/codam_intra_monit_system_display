@@ -1,7 +1,21 @@
 {
 	"addons": {
+		"{60bca08a-d75a-47d0-b08a-4d42a44bbcfd}": {
+			"updates": [
+				{
+					"version": "0.6.0",
+					"update_link": "https://github.com/FreekBes/codam_intra_monit_system_display/releases/download/v0.6.0/firefox-v0.6.0.xpi",
+					"update_info_url": "https://github.com/FreekBes/codam_intra_monit_system_display/releases/tag/v0.6.0"
+				}
+			]
+		},
 		"{e8748a9b-a957-44a5-823b-c1dfd5c583ca}": {
 			"updates": [
+				{
+					"version": "0.6.0",
+					"update_link": "https://github.com/FreekBes/codam_intra_monit_system_display/releases/download/v0.6.0/firefox-v0.6.0.xpi",
+					"update_info_url": "https://github.com/FreekBes/codam_intra_monit_system_display/releases/tag/v0.6.0"
+				},
 				{
 					"version": "0.5.0",
 					"update_link": "https://github.com/FreekBes/codam_intra_monit_system_display/releases/download/v0.5.0/firefox-v0.5.0.xpi",
