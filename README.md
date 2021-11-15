@@ -1,5 +1,5 @@
 # Codam's Monitoring System Progress for Intra
-This extension replaces the Black Hole box on 42's Intranet with a display of one's current progress towards Codam's evaluation system.
+This extension replaces the Black Hole box on 42's Intranet with a display of one's current progress towards Codam's monitoring system.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/FreekBes/codam_intra_monit_system_display/master/images/screenshot.png">

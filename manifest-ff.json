@@ -3,7 +3,7 @@
 	"name": "Codam's Monitoring System Progress for Intra",
 	"short_name": "Monitoring System for Intra",
 	"version": "0.6.0",
-	"description": "Replaces the Black Hole box on Intra 42 with a display of your current progress for Codam's evaluation system",
+	"description": "Replaces the Black Hole box on Intra 42 with a display of your current progress for Codam's monitoring system",
 	"icons": {
 		"32": "images/logo32.png",
 		"64": "images/logo64.png",
