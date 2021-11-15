@@ -173,6 +173,9 @@ var monit = {
 			}
 
 			var daysInWeek = monit.dayOfWeek + 1;
+			if (daysInWeek > 7) {
+				daysInWeek = 7;
+			}
 			var remainingWeeks = Math.floor(ltDays.length / 7) + (monit.dayOfWeek != 7 ? 1 : 0);
 			var r = 0;
 			var tempLogTimes;
