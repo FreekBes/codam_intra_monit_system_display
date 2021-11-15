@@ -56,16 +56,21 @@ var monit = {
 		var logTimesNoToday = this.logTimes.slice(1);
 		var logTimesTotalNoToday;
 
-		logTimesTotalNoToday = logTimesNoToday.reduce(sum);
-		if (this.dayOfWeek == 7 || this.logTimesTotal > this.requirements.min) {
-			this.requirements.today = this.requirements.min;
+		if (logTimesNoToday && logTimesNoToday.length > 0) {
+			logTimesTotalNoToday = logTimesNoToday.reduce(sum);
+			if (this.dayOfWeek == 7 || this.logTimesTotal > this.requirements.min) {
+				this.requirements.today = this.requirements.min;
+			}
+			else {
+				this.requirements.today = logTimesTotalNoToday + Math.round((this.requirements.min - logTimesTotalNoToday) / (7 - this.dayOfWeek));
+			}
+			console.log("Logtime up until today", logTimesTotalNoToday);
+			console.log("Expected minutes today", this.requirements.today - logTimesTotalNoToday);
+			console.log("Expected minutes after today", this.requirements.today);
 		}
 		else {
-			this.requirements.today = logTimesTotalNoToday + Math.round((this.requirements.min - logTimesTotalNoToday) / (7 - this.dayOfWeek));
+			console.warn("Could not set expected time for today, since logTimes array appears to be empty");
 		}
-		console.log("Logtime up until today", logTimesTotalNoToday);
-		console.log("Expected minutes today", this.requirements.today - logTimesTotalNoToday);
-		console.log("Expected minutes after today", this.requirements.today);
 	},
 
 	/**
