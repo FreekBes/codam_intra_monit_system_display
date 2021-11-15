@@ -58,19 +58,19 @@ var monit = {
 
 		if (logTimesNoToday && logTimesNoToday.length > 0) {
 			logTimesTotalNoToday = logTimesNoToday.reduce(sum);
-			if (this.dayOfWeek == 7 || this.logTimesTotal > this.requirements.min) {
-				this.requirements.today = this.requirements.min;
-			}
-			else {
-				this.requirements.today = logTimesTotalNoToday + Math.round((this.requirements.min - logTimesTotalNoToday) / (7 - this.dayOfWeek));
-			}
-			console.log("Logtime up until today", logTimesTotalNoToday);
-			console.log("Expected minutes today", this.requirements.today - logTimesTotalNoToday);
-			console.log("Expected minutes after today", this.requirements.today);
 		}
 		else {
-			console.warn("Could not set expected time for today, since logTimes array appears to be empty");
+			logTimesTotalNoToday = 0;
 		}
+		if (this.dayOfWeek == 7 || this.logTimesTotal > this.requirements.min) {
+			this.requirements.today = this.requirements.min;
+		}
+		else {
+			this.requirements.today = logTimesTotalNoToday + Math.round((this.requirements.min - logTimesTotalNoToday) / (7 - this.dayOfWeek));
+		}
+		console.log("Logtime up until today", logTimesTotalNoToday);
+		console.log("Expected minutes today", this.requirements.today - logTimesTotalNoToday);
+		console.log("Expected minutes after today", this.requirements.today);
 	},
 
 	/**
@@ -123,7 +123,12 @@ var monit = {
 							monit.logTimes.push(0);
 						}
 					}
-					monit.logTimesTotal = monit.logTimes.reduce(sum);
+					if (monit.logTimes && monit.logTimes.length > 0) {
+						monit.logTimesTotal = monit.logTimes.reduce(sum);
+					}
+					else {
+						monit.logTimesTotal = 0;
+					}
 					resolve();
 				}
 				catch (err) {
@@ -160,7 +165,12 @@ var monit = {
 				}
 				monit.logTimes.push(monit.parseLogTime(ltDay.getAttribute("data-original-title")));
 			}
-			monit.logTimesTotal = monit.logTimes.reduce(sum);
+			if (monit.logTimes && monit.logTimes.length > 0) {
+				monit.logTimesTotal = monit.logTimes.reduce(sum);
+			}
+			else {
+				monit.logTimesTotal = 0;
+			}
 
 			var daysInWeek = monit.dayOfWeek + 1;
 			var remainingWeeks = Math.floor(ltDays.length / 7) + (monit.dayOfWeek != 7 ? 1 : 0);
