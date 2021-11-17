@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/17 17:26:39 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/17 18:45:48 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,30 @@ var monit = {
 	bhContainer: null,
 	logTimes: [],
 	logTimesTotal: 0,
+	username: "me",
 
 	/**
 	 * Get the color of the user's coalition
 	 */
 	getCoalitionColor: function() {
-		return (document.getElementsByClassName("coalition-span")[0].style.color);
+		try {
+			return (document.getElementsByClassName("coalition-span")[0].style.color);
+		}
+		catch (err) {
+			return ("#FF0000");
+		}
+	},
+
+	/**
+	 * Get username of profile
+	 */
+	getUserName: function() {
+		try {
+			return (document.querySelector(".login[data-login]").getAttribute("data-login"));
+		}
+		catch (err) {
+			return (null);
+		}
 	},
 
 	/**
@@ -224,8 +242,6 @@ var monit = {
 	 * a fallback available to read from the web instead.
 	 */
 	getProgress: function() {
-		var username = "me";
-
 		if (window.location.pathname.indexOf("/users/") == 0) {
 			var iconLocation = document.getElementsByClassName("icon-location");
 			if (iconLocation.length == 0) {
@@ -234,7 +250,7 @@ var monit = {
 			if (iconLocation[0].nextSibling.nextSibling.textContent != "Amsterdam") {
 				return;
 			}
-			username = document.querySelector(".login[data-login]").getAttribute("data-login");
+			this.username = this.getUserName();
 		}
 		this.bhContainer = document.getElementById("goals_container");
 		if (!this.bhContainer) {
@@ -243,11 +259,11 @@ var monit = {
 		for (var i = 0; i < this.bhContainer.children.length; i++) {
 			this.bhContainer.children[i].style.display = "none";
 		}
-		this.getLogTimes(username)
+		this.getLogTimes()
 			.then(this.writeProgress)
 			.catch(function(err) {
 				console.warn("Could not read logtimes chart:", err);
-				monit.getLogTimesWeb(username).then(monit.writeProgress)
+				monit.getLogTimesWeb(monit.username).then(monit.writeProgress)
 					.catch(function(err) {
 						console.error("Could not retrieve logtimes from the web", err);
 					});
@@ -317,6 +333,24 @@ var monit = {
 			smiley.setAttribute("class", "icon-smiley-surprise");
 			smiley.setAttribute("style", "color: rgb(83, 210, 122);");
 			progressPerc.setAttribute("style", "color: rgb(83, 210, 122);");
+		}
+
+		// profile easter egg: use a certain emote on certain user pages
+		if (window.location.pathname.indexOf("/users/") == 0) {
+			switch (monit.username) {
+				case "fbes":
+					smiley.setAttribute("class", "iconf-canon");
+					break;
+				case "lde-la-h":
+					smiley.setAttribute("class", "iconf-cactus");
+					break;
+				case "jgalloni":
+					smiley.setAttribute("class", "iconf-bug-1");
+					break;
+				case "ieilat":
+					smiley.setAttribute("class", "iconf-pacman-ghost");
+					break;
+			}
 		}
 		emoteHolder.appendChild(smiley);
 		emoteHolder.appendChild(progressPerc);
