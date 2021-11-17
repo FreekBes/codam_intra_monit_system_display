@@ -3,6 +3,11 @@
 		"{60bca08a-d75a-47d0-b08a-4d42a44bbcfd}": {
 			"updates": [
 				{
+					"version": "1.0.0",
+					"update_link": "https://github.com/FreekBes/codam_intra_monit_system_display/releases/download/v1.0.0/firefox-v1.0.0.xpi",
+					"update_info_url": "https://github.com/FreekBes/codam_intra_monit_system_display/releases/tag/v1.0.0"
+				},
+				{
 					"version": "0.6.0",
 					"update_link": "https://github.com/FreekBes/codam_intra_monit_system_display/releases/download/v0.6.0/firefox-v0.6.0.xpi",
 					"update_info_url": "https://github.com/FreekBes/codam_intra_monit_system_display/releases/tag/v0.6.0"
