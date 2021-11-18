@@ -250,12 +250,12 @@ var monit = {
 			if (iconLocation[0].nextSibling.nextSibling.textContent != "Amsterdam") {
 				return;
 			}
-			this.username = this.getUserName();
 		}
 		this.bhContainer = document.getElementById("goals_container");
 		if (!this.bhContainer) {
 			return;
 		}
+		this.username = this.getUserName();
 		for (var i = 0; i < this.bhContainer.children.length; i++) {
 			this.bhContainer.children[i].style.display = "none";
 		}
@@ -336,24 +336,22 @@ var monit = {
 		}
 
 		// profile easter egg: use a certain emote on certain user pages
-		if (window.location.pathname.indexOf("/users/") == 0) {
-			switch (monit.username) {
-				case "fbes":
-					smiley.setAttribute("class", "iconf-canon");
-					break;
-				case "lde-la-h":
-					smiley.setAttribute("class", "iconf-cactus");
-					break;
-				case "jgalloni":
-					smiley.setAttribute("class", "iconf-bug-1");
-					break;
-				case "ieilat":
-					smiley.setAttribute("class", "iconf-pacman-ghost");
-					break;
-				case "pde-bakk":
-					smiley.setAttribute("class", "iconf-crown-1");
-					break;
-			}
+		switch (monit.username) {
+			case "fbes":
+				smiley.setAttribute("class", "iconf-canon");
+				break;
+			case "lde-la-h":
+				smiley.setAttribute("class", "iconf-cactus");
+				break;
+			case "jgalloni":
+				smiley.setAttribute("class", "iconf-bug-1");
+				break;
+			case "ieilat":
+				smiley.setAttribute("class", "iconf-pacman-ghost");
+				break;
+			case "pde-bakk":
+				smiley.setAttribute("class", "iconf-crown-1");
+				break;
 		}
 		emoteHolder.appendChild(smiley);
 		emoteHolder.appendChild(progressPerc);
