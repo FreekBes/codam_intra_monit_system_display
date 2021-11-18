@@ -336,7 +336,11 @@ var monit = {
 		}
 
 		// profile easter egg: use a certain emote on certain user pages
-		if (window.location.pathname.indexOf("/users/") == 0) {
+		if (window.location.pathname.indexOf("/users/") === 0 || window.location.pathname === "/") {
+			if (monit.username === 'me') {
+				// If on the homepage, get your actual username instead of just "me"
+				monit.username = monit.getUserName();
+			}
 			switch (monit.username) {
 				case "fbes":
 					smiley.setAttribute("class", "iconf-canon");
