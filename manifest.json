@@ -2,8 +2,8 @@
 	"manifest_version": 2,
 	"name": "Codam's Monitoring System Progress for Intra",
 	"short_name": "Monitoring System for Intra",
-	"version": "1.0.0",
-	"version_name": "1.0.0",
+	"version": "1.0.1",
+	"version_name": "1.0.1",
 	"description": "Replaces the Black Hole box on Intra 42 with a display of your current progress for Codam's monitoring system",
 	"icons": {
 		"32": "images/logo32.png",
