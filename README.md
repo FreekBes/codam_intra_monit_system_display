@@ -7,7 +7,7 @@ This extension replaces the Black Hole box on 42's Intranet with a display of on
 
 
 ## Download
-For Chromium browsers: download the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/codams-monitoring-system/ibbhfmdmdogpnhbnceifekblmddoniol)
+For Chromium browsers: download the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/codams-monitoring-system/ibbhfmdmdogpnhbnceifekblmddoniol). If you are using a Mac at Codam, you'll find that any extensions you install will get removed after logging out. I wrote a small script for this, which fixes this issue by forcefully installing the extension to your macOS profile. You can find this script [here](https://github.com/FreekBes/codam_auto_extension_installer).
 
 For Firefox: Mozilla has let me know they do not wish to host an extension for such a small audience on their add-ons page. Thus, GitHub is the exclusive distributor for this extension on Firefox. You can find the latest version on the [Releases page](https://github.com/FreekBes/codam_intra_monit_system_display/releases). Download the XPI file listed in the _assets_ section of the latest version. The extension **should** still automatically update using GitHub releases.
 
