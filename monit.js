@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/17 19:37:01 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/20 12:04:20 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,21 +338,34 @@ var monit = {
 		// profile easter egg: use a certain emote on certain user pages
 		switch (monit.username) {
 			case "fbes":
+				smiley.setAttribute("data-oclass", smiley.getAttribute("class"));
 				smiley.setAttribute("class", "iconf-canon");
 				break;
 			case "lde-la-h":
+				smiley.setAttribute("data-oclass", smiley.getAttribute("class"));
 				smiley.setAttribute("class", "iconf-cactus");
 				break;
 			case "jgalloni":
+				smiley.setAttribute("data-oclass", smiley.getAttribute("class"));
 				smiley.setAttribute("class", "iconf-bug-1");
 				break;
 			case "ieilat":
+				smiley.setAttribute("data-oclass", smiley.getAttribute("class"));
 				smiley.setAttribute("class", "iconf-pacman-ghost");
 				break;
 			case "pde-bakk":
+				smiley.setAttribute("data-oclass", smiley.getAttribute("class"));
 				smiley.setAttribute("class", "iconf-crown-1");
 				break;
 		}
+		smiley.addEventListener("click", function() {
+			if (!smiley.getAttribute("data-oclass")) {
+				return;
+			}
+			var tempClass = smiley.getAttribute("class");
+			smiley.setAttribute("class", smiley.getAttribute("data-oclass"));
+			smiley.setAttribute("data-oclass", tempClass);
+		});
 		emoteHolder.appendChild(smiley);
 		emoteHolder.appendChild(progressPerc);
 
