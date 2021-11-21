@@ -59,7 +59,7 @@ var monit = {
 		var thisWeek = [];
 		var timestamp = new Date().getTime();
 		thisWeek.push((new Date().toISOString().split("T")[0]));
-		for (var i = 1; i <= monit.dayOfWeek; i++) {
+		for (var i = 1; i < monit.dayOfWeek; i++) {
 			thisWeek.push(new Date(timestamp - 86400000 * i).toISOString().split("T")[0]);
 		}
 		return (thisWeek);
@@ -176,7 +176,7 @@ var monit = {
 			var i, j;
 
 			monit.logTimes = [];
-			for (i = 0; i <= monit.dayOfWeek; i++) {
+			for (i = 0; i < monit.dayOfWeek; i++) {
 				ltDay = ltDays[ltDays.length - i - 1];
 				if (!ltDay) {
 					reject("Not enough days in logtimes overview SVG");
