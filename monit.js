@@ -172,11 +172,12 @@ var monit = {
 				reject("Element #user-locations not found");
 			}
 			var ltDays = ltSvg.getElementsByTagName("g");
-			var ltDay = null;
+			var ltDay = ltDays[ltDays.length - 1];
 			var i, j;
 
 			monit.logTimes = [];
-			for (i = 0; i < monit.dayOfWeek; i++) {
+			monit.logTimes.push(monit.parseLogTime(ltDay.getAttribute("data-original-title")));
+			for (i = 1; i < monit.dayOfWeek; i++) {
 				ltDay = ltDays[ltDays.length - i - 1];
 				if (!ltDay) {
 					reject("Not enough days in logtimes overview SVG");
