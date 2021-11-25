@@ -6,7 +6,7 @@
 /*   By: fbes <fbes@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/11 19:23:05 by fbes          #+#    #+#                 */
-/*   Updated: 2021/11/20 12:04:20 by fbes          ########   odam.nl         */
+/*   Updated: 2021/11/25 16:48:17 by fbes          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ var monit = {
 	getWeekDates: function() {
 		var thisWeek = [];
 		var timestamp = new Date().getTime();
-		thisWeek.push((new Date().toISOString().split("T")[0]));
-		for (var i = 1; i < monit.dayOfWeek; i++) {
+		for (var i = 0; i <= monit.dayOfWeek; i++) {
 			thisWeek.push(new Date(timestamp - 86400000 * i).toISOString().split("T")[0]);
 		}
+		console.log("This week's dates: ", thisWeek);
 		return (thisWeek);
 	},
 
@@ -176,8 +176,7 @@ var monit = {
 			var i, j;
 
 			monit.logTimes = [];
-			monit.logTimes.push(monit.parseLogTime(ltDay.getAttribute("data-original-title")));
-			for (i = 1; i < monit.dayOfWeek; i++) {
+			for (i = 0; i <= monit.dayOfWeek; i++) {
 				ltDay = ltDays[ltDays.length - i - 1];
 				if (!ltDay) {
 					reject("Not enough days in logtimes overview SVG");
@@ -192,10 +191,7 @@ var monit = {
 			}
 
 			var daysInWeek = monit.dayOfWeek + 1;
-			if (daysInWeek > 7) {
-				daysInWeek = 7;
-			}
-			var remainingWeeks = Math.floor(ltDays.length / 7) + (monit.dayOfWeek != 7 ? 1 : 0);
+			var remainingWeeks = Math.floor(ltDays.length / 7) + (monit.dayOfWeek != 6 ? 1 : 0);
 			var r = 0;
 			var tempLogTimes;
 			for (i = 0; i < remainingWeeks; i++) {
@@ -382,7 +378,7 @@ var monit = {
 	init: function() {
 		this.dayOfWeek = new Date().getDay() - 1;
 		if (this.dayOfWeek < 0) {
-			this.dayOfWeek = 7;
+			this.dayOfWeek = 6;
 		}
 	}
 };
