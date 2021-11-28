@@ -374,7 +374,7 @@ var monit = {
 		deprecatedMessage.setAttribute("id", "codam_intra_monit_system_display_deprecation_notice");
 		deprecatedMessage.setAttribute("class", "upgraded");
 		if (navigator.userAgent.indexOf("Chrome") > -1) {
-			deprecatedMessage.innerHTML = '<span><b>This extension is deprecated!</b><br>Please install <a href="https://chrome.google.com/webstore/detail/dark-theme-for-intra-42/hmflgigeigiejaogcgamkecmlibcpdgo">Improved Intra 42</a> instead.</span>';
+			deprecatedMessage.innerHTML = '<span><b>This extension is deprecated!</b><br>Please install <a href="https://chrome.google.com/webstore/detail/hmflgigeigiejaogcgamkecmlibcpdgo">Improved Intra 42</a> instead.</span>';
 		}
 		else {
 			deprecatedMessage.innerHTML = '<span><b>This extension is deprecated!</b><br>Please install <a href="https://github.com/FreekBes/improved_intra/">Improved Intra 42</a> instead.</span>';
