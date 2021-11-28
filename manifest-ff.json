@@ -1,9 +1,9 @@
 {
 	"manifest_version": 2,
-	"name": "Codam's Monitoring System Progress for Intra",
+	"name": "[DEPRECATED] Codam's Monitoring System Progress for Intra",
 	"short_name": "Monitoring System for Intra",
-	"version": "1.0.3",
-	"description": "Replaces the Black Hole box on Intra 42 with a display of your current progress for Codam's monitoring system",
+	"version": "1.0.4",
+	"description": "[DEPRECATED] Replaces the Black Hole box on Intra 42 with a display of your current progress for Codam's monitoring system. This extension has been replaced by the Improved Intra 42 extension. Please find it on GitHub and delete this one.",
 	"icons": {
 		"32": "images/logo32.png",
 		"64": "images/logo64.png",

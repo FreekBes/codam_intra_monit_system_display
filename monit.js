@@ -285,7 +285,7 @@ var monit = {
 		console.log("Total minutes", monit.logTimesTotal);
 
 		var progressNode = document.createElement("div");
-		progressNode.setAttribute("id", "monit-progress");
+		progressNode.setAttribute("id", "monit-progress-old");
 
 		var progressTitle = document.createElement("div");
 		progressTitle.setAttribute("class", "mb-1");
@@ -293,7 +293,7 @@ var monit = {
 		progressNode.appendChild(progressTitle);
 
 		var progressText = document.createElement("div");
-		progressText.setAttribute("id", "monit-progress-text");
+		progressText.setAttribute("id", "monit-progress-old-text");
 
 		var emoteHolder = document.createElement("div");
 		emoteHolder.setAttribute("id", "lt-holder");
@@ -303,7 +303,7 @@ var monit = {
 		emoteHolder.setAttribute("title", "");
 
 		var smiley = document.createElement("span");
-		smiley.setAttribute("id", "lt-emote");
+		smiley.setAttribute("id", "lt-emote-old");
 		var progressPerc = document.createElement("span");
 		progressPerc.innerHTML = Math.floor(monit.logTimesTotal / 1440 * 100) + "% complete";
 		if (monit.logTimesTotal < monit.requirements.today) {
@@ -370,6 +370,17 @@ var monit = {
 
 		progressNode.appendChild(progressText);
 
+		var deprecatedMessage = document.createElement("div");
+		deprecatedMessage.setAttribute("id", "codam_intra_monit_system_display_deprecation_notice");
+		deprecatedMessage.setAttribute("class", "upgraded");
+		if (navigator.userAgent.indexOf("Chrome") > -1) {
+			deprecatedMessage.innerHTML = '<span><b>This extension is deprecated!</b><br>Please install <a href="https://chrome.google.com/webstore/detail/dark-theme-for-intra-42/hmflgigeigiejaogcgamkecmlibcpdgo">Improved Intra 42</a> instead.</span>';
+		}
+		else {
+			deprecatedMessage.innerHTML = '<span><b>This extension is deprecated!</b><br>Please install <a href="https://github.com/FreekBes/improved_intra/">Improved Intra 42</a> instead.</span>';
+		}
+		progressNode.appendChild(deprecatedMessage);
+
 		monit.bhContainer.appendChild(progressNode);
 		monit.bhContainer.className = monit.bhContainer.className.replace("hidden", "");
 		monit.addTooltip();
@@ -383,7 +394,20 @@ var monit = {
 	}
 };
 
-monit.init();
+// check if already exists due to Improved Intra extension
+// this extension is now deprecated, please install Improved Intra instead, it has the same functionality and more
+// https://github.com/FreekBes/improved_intra/
 setTimeout(function() {
-	monit.getProgress();
-}, 250);
+	if (!document.getElementById("monit-progress")) {
+		monit.init();
+		setTimeout(function() {
+			monit.getProgress();
+		}, 500);
+	}
+	else {
+		var deprecatedMessage = document.createElement("div");
+		deprecatedMessage.setAttribute("id", "codam_intra_monit_system_display_deprecation_notice");
+		deprecatedMessage.setAttribute("class", "upgraded");
+		document.getElementById("monit-progress").appendChild(deprecatedMessage);
+	}
+}, 1000);

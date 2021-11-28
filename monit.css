@@ -10,16 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#monit-progress .mb-1 {
+#monit-progress-old .mb-1 {
 	text-align: center;
 }
 
-#monit-progress-text {
+#monit-progress-old-text {
 	text-align: center;
 	font-size: xx-large;
 }
 
-.profile-item #lt-emote {
+.profile-item #lt-emote-old {
 	vertical-align: middle;
 	margin-right: 0.5ch;
+}
+
+#codam_intra_monit_system_display_deprecation_notice {
+	font-family: Sans-serif;
+	letter-spacing: 0px;
+	padding: 0px 8px;
+	color: #dadada;
+	font-size: small;
+	text-align: center;
+	font-weight: 100;
 }
